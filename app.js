@@ -32,7 +32,7 @@ const images = [
     },
     {
         src: './images/destiny8.jpg',
-        alt: 'Destiny 2 Guardians unleash their power in a dazzling clash against Darkness'
+        alt: 'A Destiny 2 Guardian unleashes their power in a dazzling clash against the Cabal enemy'
     }
 ]
 
@@ -44,7 +44,7 @@ function clearBox(container) {
     }
 }
 
-//thumbnail
+// thumbnails
 
 function createThumbnails() {
     clearBox(thumbnails);
@@ -68,7 +68,12 @@ function createThumbnails() {
 
 createThumbnails();
 
-//big images
+// ARIA
+
+displayContainer.setAttribute('aria-live', 'polite');
+displayContainer.setAttribute('aria-atomic', 'true');
+
+// big images
 
 function createBigImage(imgDetails) {
     clearBox(displayContainer);
@@ -77,6 +82,7 @@ function createBigImage(imgDetails) {
     bigImage.alt = imgDetails.alt;
 
     displayContainer.appendChild(bigImage);
+
 }
 
 createBigImage(images[picture]);
@@ -95,7 +101,7 @@ function scrollThumbnails() {
 }
 
 
-//buttons
+// screen buttons
 
 const nextButton = document.getElementById('next');
 const prevButton = document.getElementById('previous');
@@ -120,4 +126,14 @@ function prevImage() {
 
 nextButton.addEventListener('click', nextImage);
 prevButton.addEventListener('click', prevImage);
+
+// change with left/right keys
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowRight') {
+        nextImage();
+    } else if (event.key === 'ArrowLeft') {
+        prevImage();
+    }
+});
 
