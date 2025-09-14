@@ -36,53 +36,77 @@ const images = [
     }
 ]
 
+let picture = 0;
+
+function clearBox(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
+
 //thumbnail
 
 function createThumbnails() {
+    clearBox(thumbnails);
 
     images.forEach(function(image, index) {
-        let imageElement = document.createElement('img');
+        let destinyPic = document.createElement('img');
         console.log('current image is', image);
-        imageElement.src = image.src;
-        imageElement.alt = image.alt;
-        imageElement.addEventListener('click', function() {
-            console.log(image)
-            createBigImage(image)
-        })
-        thumbnails.appendChild(imageElement)
-    })
+        destinyPic.src = image.src;
+        destinyPic.alt = image.alt;
+
+        destinyPic.addEventListener('click', function() {
+            picture = index;
+            console.log(image);
+            createBigImage(image);
+            scrollThumbnails();
+        });
+        thumbnails.appendChild(destinyPic)
+    });
+    scrollThumbnails();
 }
 
-createThumbnails()
+createThumbnails();
 
 //big images
 
 function createBigImage(imgDetails) {
-    displayContainer.innerHTML = ''
+    clearBox(displayContainer);
+    let bigImage = document.createElement('img');
+    bigImage.src =  imgDetails.src;
+    bigImage.alt = imgDetails.alt;
 
-const bigImage = document.createElement('img')
-
-    bigImage.src =  imgDetails.src
-    bigImage.alt = imgDetails.alt
-
-    displayContainer.appendChild(bigImage)
+    displayContainer.appendChild(bigImage);
 }
+
+createBigImage(images[picture]);
+
+// scroll
+
+function scrollThumbnails() {
+    let allPics = thumbnails.querySelectorAll('img');
+    let presentPic = allPics[picture];
+    if (presentPic) {
+        presentPic.scrollIntoView({
+            behaviour: 'smooth',
+            inline: 'center'
+        });
+    }
+}
+
 
 //buttons
 
 const nextButton = document.getElementById('next');
 const prevButton = document.getElementById('previous');
 
-let picture = 0;
-
-createBigImage(images[picture]);
-
 function nextImage() {
         picture = picture + 1;
-        if (picture === images.length) {
+        if (picture >= images.length) {
             picture = 0;
         }
         createBigImage(images[picture]);
+        scrollThumbnails();
     }
 
 function prevImage() {
@@ -91,6 +115,7 @@ function prevImage() {
         picture = images.length - 1;
     }
     createBigImage(images[picture]);
+    scrollThumbnails();
 }
 
 nextButton.addEventListener('click', nextImage);
